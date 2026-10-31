@@ -8,7 +8,7 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap">        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap">
         <link rel="stylesheet" href="style.css">
     </head>
 
@@ -20,7 +20,10 @@
                         <p class="description">JUMPING GAME</p>
                         <h1>Desert Run</h1>
                     </div>
-                    <p id="score">Score: 0</p>
+                    <div class="hud">
+                        <p id="score" aria-live="polite">Score: 0</p>
+                        <button type="button" id="mute-button" aria-pressed="false" aria-label="Mute sound">Sound on</button>
+                    </div>
                 </header>
 
                 <div class="game-background" aria-hidden="true">
@@ -31,6 +34,8 @@
                     <span class="dune dune-front"></span>
                 </div>
 
+                <div id="fx" aria-hidden="true"></div>
+                <div id="hit-flash" aria-hidden="true"></div>
                 <p id="message">Press SPACE to start!</p>
                 <div id="player" aria-hidden="true"></div>
             </section>
@@ -39,7 +44,7 @@
                 Press <kbd>SPACE</kbd> or <kbd>↑</kbd> to jump
             </p>
         </main>
-        
+
         <script src="script.js"></script>
     </body>
 </html>
