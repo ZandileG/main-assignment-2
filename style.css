@@ -44,6 +44,10 @@ body {
                 0 4px 0 rgb(255 255 255 / 70%) inset;
 }
 
+#game.shake {
+    animation: shake 0.42s ease-out;
+}
+
 .game-display {
     position: relative;
     z-index: 4;
@@ -78,18 +82,48 @@ body {
     letter-spacing: -0.045em;
 }
 
+.hud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 #score {
     margin: 0;
-    padding: 10px 15px;
+    padding: 10px 16px;
     border: 1px solid rgb(255 255 255 / 55%);
     border-radius: 999px;
     background: rgb(255 248 230 / 72%);
     color: #67474a;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.04em;
     white-space: nowrap;
+}
+
+#score.bump {
+    animation: score-bump 0.28s ease-out;
+}
+
+#mute-button {
+    margin: 0;
+    padding: 10px 14px;
+    border: 1px solid rgb(255 255 255 / 55%);
+    border-radius: 999px;
+    background: rgb(255 248 230 / 72%);
+    color: #67474a;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#mute-button:hover,
+#mute-button:focus-visible {
+    background: #fff8e6;
 }
 
 .game-background {
@@ -109,6 +143,7 @@ body {
     border-radius: 50%;
     background: #fff0b8;
     box-shadow: 0 0 55px rgb(255 244 189 / 72%);
+    animation: sun-pulse 4.8s ease-in-out infinite;
 }
 
 .cloud {
@@ -117,6 +152,7 @@ body {
     height: 13px;
     border-radius: 50%;
     background: rgb(255 246 221 / 55%);
+    animation: cloud-drift 22s linear infinite;
 }
 
 .cloud::before, .cloud::after {
@@ -149,6 +185,8 @@ body {
     top: 9%;
     left: 55%;
     transform: scale(0.58);
+    animation-duration: 28s;
+    animation-delay: -8s;
 }
 
 .dune {
@@ -187,6 +225,19 @@ body {
     border-radius: 12px 12px 8px 8px;
     background: #5f7770;
     box-shadow: 0 4px 0 rgb(91 53 51 / 14%);
+    transform-origin: 50% 100%;
+}
+
+#player.running {
+    animation: run-bob 0.28s ease-in-out infinite;
+}
+
+#player.airborne {
+    animation: none;
+}
+
+#player.landing {
+    animation: land-squash 0.18s ease-out;
 }
 
 #player::before {
@@ -212,6 +263,50 @@ body {
     box-shadow: 0 4px 0 rgb(91 53 51 / 14%);
 }
 
+.obstacle::before,
+.obstacle::after {
+    position: absolute;
+    border: 2px solid #754343;
+    border-radius: 999px;
+    background: #c36f55;
+    content: "";
+}
+
+.obstacle-short::before {
+    top: 10px;
+    right: -9px;
+    width: 10px;
+    height: 7px;
+}
+
+.obstacle-medium::before {
+    top: 12px;
+    left: -8px;
+    width: 11px;
+    height: 8px;
+}
+
+.obstacle-medium::after {
+    top: 18px;
+    right: -8px;
+    width: 10px;
+    height: 7px;
+}
+
+.obstacle-tall::before {
+    top: 16px;
+    left: -9px;
+    width: 12px;
+    height: 9px;
+}
+
+.obstacle-tall::after {
+    top: 28px;
+    right: -8px;
+    width: 11px;
+    height: 8px;
+}
+
 #game::after {
     position: absolute;
     z-index: 3;
@@ -222,6 +317,44 @@ body {
     border-top: 2px solid rgb(255 221 160 / 80%);
     background: #9d5d52;
     content: "";
+}
+
+#fx {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.dust {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgb(157 93 82 / 45%);
+    animation: dust-puff 0.42s ease-out forwards;
+}
+
+.score-pop {
+    position: absolute;
+    color: #67474a;
+    font-size: 18px;
+    font-weight: 800;
+    text-shadow: 0 1px 0 rgb(255 248 230 / 80%);
+    animation: score-float 0.7s ease-out forwards;
+}
+
+#hit-flash {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    background: rgb(188 101 79 / 0%);
+    pointer-events: none;
+}
+
+#game.hit #hit-flash {
+    animation: hit-flash 0.4s ease-out;
 }
 
 #message {
@@ -273,6 +406,56 @@ kbd {
     font-weight: 800;
 }
 
+@keyframes run-bob {
+    0%, 100% { transform: translateY(var(--player-y, 0px)) scaleY(1); }
+    50% { transform: translateY(calc(var(--player-y, 0px) - 3px)) scaleY(0.96); }
+}
+
+@keyframes land-squash {
+    0% { transform: translateY(var(--player-y, 0px)) scale(1.08, 0.88); }
+    100% { transform: translateY(var(--player-y, 0px)) scale(1, 1); }
+}
+
+@keyframes score-bump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+@keyframes score-float {
+    0% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -36px); }
+}
+
+@keyframes dust-puff {
+    0% { opacity: 0.7; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dust-x, 12px), var(--dust-y, -16px)) scale(0.4); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+}
+
+@keyframes hit-flash {
+    0% { background: rgb(188 101 79 / 38%); }
+    100% { background: rgb(188 101 79 / 0%); }
+}
+
+@keyframes sun-pulse {
+    0%, 100% { box-shadow: 0 0 55px rgb(255 244 189 / 72%); }
+    50% { box-shadow: 0 0 78px rgb(255 244 189 / 92%); }
+}
+
+@keyframes cloud-drift {
+    0% { margin-left: 0; }
+    50% { margin-left: 28px; }
+    100% { margin-left: 0; }
+}
+
 @media (max-width: 520px) {
     body {
         padding: 16px;
@@ -293,6 +476,11 @@ kbd {
 
     #score {
         padding: 9px 11px;
+        font-size: 13px;
+    }
+
+    #mute-button {
+        padding: 8px 10px;
         font-size: 11px;
     }
 }
@@ -301,6 +489,13 @@ kbd {
     *,
     *::before,
     *::after {
+        animation: none !important;
         scroll-behavior: auto !important;
+    }
+
+    #player.running,
+    #player.landing,
+    #player.airborne {
+        animation: none !important;
     }
 }
